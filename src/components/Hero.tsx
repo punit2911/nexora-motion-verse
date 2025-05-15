@@ -1,10 +1,18 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const { scrollY } = useScroll();
+  
+  // Scroll-based animations
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const scale = useTransform(scrollY, [0, 300], [1, 0.9]);
+  const y = useTransform(scrollY, [0, 300], [0, -50]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -22,76 +30,158 @@ const Hero = () => {
     };
   }, []);
 
+  // Text reveal animation variants
+  const textContainer = {
+    hidden: { opacity: 0 },
+    visible: (i = 1) => ({
+      opacity: 1,
+      transition: { staggerChildren: 0.12, delayChildren: 0.04 * i },
+    }),
+  };
+
+  const textChild = {
+    hidden: {
+      opacity: 0,
+      y: 20,
+      transition: {
+        type: "spring",
+        damping: 12,
+        stiffness: 100,
+      },
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        damping: 12,
+        stiffness: 100,
+      },
+    },
+  };
+
+  const handleExploreClick = () => {
+    navigate('/features');
+  };
+
+  const handleShowcaseClick = () => {
+    navigate('/showcase');
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1 }}
-      className="relative h-screen overflow-hidden bg-gradient-to-br from-nexora-dark to-black"
       ref={containerRef}
+      style={{ opacity, scale, y }}
+      className="relative h-screen overflow-hidden"
     >
       {/* Animated background grid */}
       <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
 
-      {/* Parallax layers */}
-      <div className="parallax-container h-full w-full">
-        {/* Background layer */}
-        <motion.div 
-          className="parallax-layer"
-          style={{ 
-            transform: `translateX(${mousePosition.x * -20}px) translateY(${mousePosition.y * -20}px)` 
-          }}
+      {/* Content */}
+      <div className="relative z-10 h-full w-full flex flex-col items-center justify-center px-4">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={textContainer}
+          className="text-center max-w-5xl mx-auto"
         >
-          <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-nexora-primary rounded-full filter blur-[100px] opacity-20"></div>
-          <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-nexora-secondary rounded-full filter blur-[120px] opacity-20"></div>
-        </motion.div>
-
-        {/* Middle layer */}
-        <motion.div 
-          className="parallax-layer"
-          style={{ 
-            transform: `translateX(${mousePosition.x * -40}px) translateY(${mousePosition.y * -40}px)` 
-          }}
-        >
-          <div className="absolute top-1/3 right-1/3 w-48 h-48 bg-nexora-accent rounded-full filter blur-[80px] opacity-15"></div>
-        </motion.div>
-
-        {/* Content layer */}
-        <div className="relative z-10 h-full w-full flex flex-col items-center justify-center px-4">
-          <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-center max-w-5xl mx-auto"
+          <motion.div 
+            variants={textChild} 
+            className="relative inline-block mb-4"
           >
-            <div className="relative inline-block mb-4">
-              <span className="text-sm md:text-base font-medium text-nexora-secondary tracking-wider">A Dawn of Digital Innovation</span>
-            </div>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
-              <span className="glitch-effect" data-text="Welcome to Nexora">Welcome to Nexora</span>
-            </h1>
-            <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-xl mx-auto">
-              We merge cinematic 3D environments with buttery-smooth interactions to create browsing experiences that feel alive.
-            </p>
-            <motion.div 
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.8 }}
-            >
-              <button className="magnetic-button bg-nexora-primary hover:bg-opacity-90 text-white px-8 py-3 rounded-full font-medium transition-all">
-                Explore Features
-              </button>
-              <button className="magnetic-button bg-transparent border border-nexora-secondary text-nexora-secondary hover:bg-nexora-secondary hover:bg-opacity-10 px-8 py-3 rounded-full font-medium transition-all">
-                View Showcase
-              </button>
-            </motion.div>
+            <span className="text-sm md:text-base font-medium text-nexora-secondary tracking-wider">
+              A Dawn of Digital Innovation
+            </span>
           </motion.div>
-        </div>
+          
+          {/* Main title with letter animation */}
+          <motion.h1 
+            className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6"
+            variants={textContainer}
+          >
+            {Array.from("Welcome to Nexora").map((letter, index) => (
+              <motion.span
+                key={index}
+                variants={textChild}
+                className="inline-block"
+                style={{ 
+                  display: 'inline-block',
+                  filter: letter !== " " ? "drop-shadow(0 0 15px rgba(110, 89, 165, 0.5))" : "none"
+                }}
+              >
+                {letter === " " ? "\u00A0" : letter}
+              </motion.span>
+            ))}
+          </motion.h1>
+          
+          <motion.p 
+            variants={textChild}
+            className="text-lg md:text-xl text-gray-300 mb-8 max-w-xl mx-auto"
+          >
+            We merge cinematic 3D environments with buttery-smooth interactions to create browsing experiences that feel alive.
+          </motion.p>
+          
+          <motion.div 
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+            variants={textContainer}
+          >
+            <motion.button 
+              variants={textChild}
+              onClick={handleExploreClick}
+              whileHover={{ 
+                scale: 1.05,
+                boxShadow: "0 0 15px rgba(110, 89, 165, 0.7)" 
+              }}
+              whileTap={{ scale: 0.98 }}
+              className="bg-nexora-primary hover:bg-opacity-90 text-white px-8 py-3 rounded-full font-medium transition-all"
+            >
+              Explore Features
+            </motion.button>
+            
+            <motion.button 
+              variants={textChild}
+              onClick={handleShowcaseClick}
+              whileHover={{ 
+                scale: 1.05,
+                boxShadow: "0 0 15px rgba(51, 195, 240, 0.7)" 
+              }}
+              whileTap={{ scale: 0.98 }}
+              className="bg-transparent border border-nexora-secondary text-nexora-secondary hover:bg-nexora-secondary hover:bg-opacity-10 px-8 py-3 rounded-full font-medium transition-all"
+            >
+              View Showcase
+            </motion.button>
+          </motion.div>
+        </motion.div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="scroll-indicator"></div>
+      {/* Animated scroll indicator */}
+      <motion.div 
+        className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+        animate={{ y: [0, 10, 0] }}
+        transition={{ 
+          repeat: Infinity, 
+          duration: 2,
+          ease: "easeInOut" 
+        }}
+      >
+        <motion.div 
+          className="w-6 h-10 border-2 border-white/60 rounded-full flex justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 1 }}
+        >
+          <motion.div 
+            className="w-1.5 h-1.5 bg-white rounded-full mt-2"
+            animate={{ y: [0, 15, 0] }}
+            transition={{ 
+              repeat: Infinity, 
+              duration: 2,
+              ease: "easeInOut",
+              delay: 0.2
+            }}
+          />
+        </motion.div>
+      </motion.div>
     </motion.div>
   );
 };

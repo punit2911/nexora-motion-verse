@@ -184,6 +184,7 @@ const AnimatedBackground = () => {
     <div 
       ref={containerRef} 
       className="fixed top-0 left-0 w-full h-full z-0 pointer-events-none"
+      style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
     />
   );
 };

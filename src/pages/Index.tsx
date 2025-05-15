@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import Features from '@/components/Features';
@@ -15,15 +15,17 @@ const Index = () => {
       {/* 3D Animated Background */}
       <AnimatedBackground />
       
-      <Navbar />
-      <main>
-        <Hero />
-        <Features />
-        <Showcase />
-        <Technology />
-        <Contact />
-      </main>
-      <Footer />
+      <div className="relative z-10">
+        <Navbar />
+        <main>
+          <Hero />
+          <Features />
+          <Showcase />
+          <Technology />
+          <Contact />
+        </main>
+        <Footer />
+      </div>
     </div>
   );
 };

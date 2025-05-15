@@ -9,11 +9,13 @@ const FeaturesPage = () => {
   return (
     <div className="min-h-screen bg-black relative">
       <AnimatedBackground />
-      <Navbar />
-      <div className="pt-20 relative z-10">
-        <Features />
+      <div className="relative z-10">
+        <Navbar />
+        <div className="pt-20">
+          <Features />
+        </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
   );
 };

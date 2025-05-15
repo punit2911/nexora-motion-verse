@@ -51,22 +51,30 @@ const Index = () => {
   const handleMouseEnterButton = () => setCursorVariant('button');
   const handleMouseLeave = () => setCursorVariant('default');
 
-  // Add event listeners to interactive elements
+  // Add event listeners to interactive elements after the component mounts
   useEffect(() => {
-    const links = document.querySelectorAll('a, .hover-expand');
-    const buttons = document.querySelectorAll('button, .magnetic-button');
+    // Delay to ensure DOM elements are available
+    const timer = setTimeout(() => {
+      const links = document.querySelectorAll('a, .hover-expand');
+      const buttons = document.querySelectorAll('button, .magnetic-button');
 
-    links.forEach(link => {
-      link.addEventListener('mouseenter', handleMouseEnterLink);
-      link.addEventListener('mouseleave', handleMouseLeave);
-    });
+      links.forEach(link => {
+        link.addEventListener('mouseenter', handleMouseEnterLink);
+        link.addEventListener('mouseleave', handleMouseLeave);
+      });
 
-    buttons.forEach(button => {
-      button.addEventListener('mouseenter', handleMouseEnterButton);
-      button.addEventListener('mouseleave', handleMouseLeave);
-    });
+      buttons.forEach(button => {
+        button.addEventListener('mouseenter', handleMouseEnterButton);
+        button.addEventListener('mouseleave', handleMouseLeave);
+      });
+    }, 500);
 
     return () => {
+      clearTimeout(timer);
+      // Clean up event listeners
+      const links = document.querySelectorAll('a, .hover-expand');
+      const buttons = document.querySelectorAll('button, .magnetic-button');
+
       links.forEach(link => {
         link.removeEventListener('mouseenter', handleMouseEnterLink);
         link.removeEventListener('mouseleave', handleMouseLeave);
@@ -83,7 +91,8 @@ const Index = () => {
     <div className="min-h-screen overflow-x-hidden bg-black">
       {/* Custom cursor */}
       <motion.div 
-        className="hidden md:block cursor-follower"
+        className="hidden md:block cursor-follower fixed top-0 left-0 w-10 h-10 rounded-full pointer-events-none z-50"
+        style={{ mixBlendMode: 'difference' }}
         variants={variants}
         animate={cursorVariant}
         transition={{ type: "spring", damping: 15, stiffness: 150 }}

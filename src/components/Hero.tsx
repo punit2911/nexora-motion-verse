@@ -94,19 +94,23 @@ const Hero = () => {
             </span>
           </motion.div>
           
-          {/* Main title with letter animation */}
+          {/* Enhanced title with advanced blur effect */}
           <motion.h1 
-            className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6"
+            className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 relative"
             variants={textContainer}
           >
+            <div className="absolute -inset-1 blur-[20px] bg-gradient-to-r from-nexora-primary via-nexora-secondary to-nexora-accent opacity-70 rounded-lg"></div>
+            <div className="absolute -inset-2 blur-[40px] bg-nexora-primary/30 rounded-lg animate-pulse"></div>
             {Array.from("Welcome to Nexora").map((letter, index) => (
               <motion.span
                 key={index}
                 variants={textChild}
-                className="inline-block"
+                className="inline-block relative z-10"
                 style={{ 
                   display: 'inline-block',
-                  filter: letter !== " " ? "drop-shadow(0 0 15px rgba(110, 89, 165, 0.5))" : "none"
+                  textShadow: letter !== " " ? 
+                    "0 0 15px rgba(110, 89, 165, 0.8), 0 0 30px rgba(51, 195, 240, 0.4), 0 0 5px rgba(249, 115, 22, 0.3)" 
+                    : "none"
                 }}
               >
                 {letter === " " ? "\u00A0" : letter}
@@ -116,7 +120,7 @@ const Hero = () => {
           
           <motion.p 
             variants={textChild}
-            className="text-lg md:text-xl text-gray-300 mb-8 max-w-xl mx-auto"
+            className="text-lg md:text-xl text-gray-300 mb-8 max-w-xl mx-auto relative z-10"
           >
             We merge cinematic 3D environments with buttery-smooth interactions to create browsing experiences that feel alive.
           </motion.p>
@@ -130,12 +134,13 @@ const Hero = () => {
               onClick={handleExploreClick}
               whileHover={{ 
                 scale: 1.05,
-                boxShadow: "0 0 15px rgba(110, 89, 165, 0.7)" 
+                boxShadow: "0 0 20px rgba(110, 89, 165, 0.8)" 
               }}
               whileTap={{ scale: 0.98 }}
-              className="bg-nexora-primary hover:bg-opacity-90 text-white px-8 py-3 rounded-full font-medium transition-all"
+              className="bg-nexora-primary hover:bg-opacity-90 text-white px-8 py-3 rounded-full font-medium transition-all relative z-10 overflow-hidden group"
             >
-              Explore Features
+              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-nexora-primary to-nexora-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+              <span className="relative z-10">Explore Features</span>
             </motion.button>
             
             <motion.button 
@@ -143,10 +148,10 @@ const Hero = () => {
               onClick={handleShowcaseClick}
               whileHover={{ 
                 scale: 1.05,
-                boxShadow: "0 0 15px rgba(51, 195, 240, 0.7)" 
+                boxShadow: "0 0 20px rgba(51, 195, 240, 0.8)" 
               }}
               whileTap={{ scale: 0.98 }}
-              className="bg-transparent border border-nexora-secondary text-nexora-secondary hover:bg-nexora-secondary hover:bg-opacity-10 px-8 py-3 rounded-full font-medium transition-all"
+              className="bg-transparent border border-nexora-secondary text-nexora-secondary hover:bg-nexora-secondary hover:bg-opacity-10 px-8 py-3 rounded-full font-medium transition-all relative z-10"
             >
               View Showcase
             </motion.button>

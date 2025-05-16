@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence, Variants } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
@@ -34,22 +34,29 @@ const Hero = () => {
     };
   }, []);
 
-  // Typing animation effect
+  // Typing animation effect with special handling for "We"
   useEffect(() => {
-    let currentIndex = 0;
-    setDisplayText('');
+    // Start with just "W" for a brief moment
+    setDisplayText('W');
     
-    const typingInterval = setInterval(() => {
-      if (currentIndex < fullText.length) {
-        setDisplayText(prev => prev + fullText.charAt(currentIndex));
-        currentIndex++;
-      } else {
-        clearInterval(typingInterval);
-        setIsTypingComplete(true);
-      }
-    }, 40); // Speed of typing
+    // Delay before completing to "We"
+    const initialDelay = setTimeout(() => {
+      let currentIndex = 1; // Start from index 1 (after "W")
+      
+      const typingInterval = setInterval(() => {
+        if (currentIndex < fullText.length) {
+          setDisplayText(prev => prev + fullText.charAt(currentIndex));
+          currentIndex++;
+        } else {
+          clearInterval(typingInterval);
+          setIsTypingComplete(true);
+        }
+      }, 40); // Speed of typing
+      
+      return () => clearInterval(typingInterval);
+    }, 800); // Delay before completing "We"
     
-    return () => clearInterval(typingInterval);
+    return () => clearTimeout(initialDelay);
   }, []);
 
   // Text reveal animation variants
@@ -90,14 +97,14 @@ const Hero = () => {
     navigate('/showcase');
   };
 
-  // Blinking cursor animation
-  const cursorVariants = {
+  // Blinking cursor animation - fixed type definition
+  const cursorVariants: Variants = {
     blinking: {
       opacity: [0, 1, 0],
       transition: {
         duration: 1,
         repeat: Infinity,
-        repeatType: "loop"
+        repeatType: "loop" as const,
       }
     }
   };
@@ -152,7 +159,7 @@ const Hero = () => {
             ))}
           </motion.h1>
           
-          {/* Typing effect for paragraph */}
+          {/* Typing effect for paragraph with special handling for "W" */}
           <div className="text-lg md:text-xl text-gray-300 mb-8 max-w-xl mx-auto relative z-10 h-[80px] flex items-center justify-center">
             <div className="flex">
               <p>{displayText}</p>

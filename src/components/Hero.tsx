@@ -41,19 +41,26 @@ const Hero = () => {
     
     // Delay before completing to "We"
     const initialDelay = setTimeout(() => {
-      let currentIndex = 1; // Start from index 1 (after "W")
+      setDisplayText('We');
       
-      const typingInterval = setInterval(() => {
-        if (currentIndex < fullText.length) {
-          setDisplayText(prev => prev + fullText.charAt(currentIndex));
-          currentIndex++;
-        } else {
-          clearInterval(typingInterval);
-          setIsTypingComplete(true);
-        }
-      }, 40); // Speed of typing
+      // Then continue with the rest of the text after another short delay
+      const continueDelay = setTimeout(() => {
+        let currentIndex = 2; // Start from index 2 (after "We")
+        
+        const typingInterval = setInterval(() => {
+          if (currentIndex < fullText.length) {
+            setDisplayText(prev => prev + fullText.charAt(currentIndex));
+            currentIndex++;
+          } else {
+            clearInterval(typingInterval);
+            setIsTypingComplete(true);
+          }
+        }, 40); // Speed of typing
+        
+        return () => clearInterval(typingInterval);
+      }, 400); // Delay before continuing with the rest of the text
       
-      return () => clearInterval(typingInterval);
+      return () => clearTimeout(continueDelay);
     }, 800); // Delay before completing "We"
     
     return () => clearTimeout(initialDelay);
@@ -159,7 +166,7 @@ const Hero = () => {
             ))}
           </motion.h1>
           
-          {/* Typing effect for paragraph with special handling for "W" */}
+          {/* Typing effect for paragraph with special handling for "We" */}
           <div className="text-lg md:text-xl text-gray-300 mb-8 max-w-xl mx-auto relative z-10 h-[80px] flex items-center justify-center">
             <div className="flex">
               <p>{displayText}</p>

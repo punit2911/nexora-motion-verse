@@ -41,11 +41,11 @@ const Hero = () => {
     
     // Delay before completing to "We"
     const initialDelay = setTimeout(() => {
-      setDisplayText('We');
+      setDisplayText('We '); // Added a space after "We"
       
       // Then continue with the rest of the text after another short delay
       const continueDelay = setTimeout(() => {
-        let currentIndex = 2; // Start from index 2 (after "We")
+        let currentIndex = 3; // Start from index 3 (after "We ")
         
         const typingInterval = setInterval(() => {
           if (currentIndex < fullText.length) {

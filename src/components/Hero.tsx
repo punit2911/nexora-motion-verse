@@ -5,9 +5,13 @@ import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [displayText, setDisplayText] = useState('');
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { scrollY } = useScroll();
+  
+  const fullText = "We merge cinematic 3D environments with buttery-smooth interactions to create browsing experiences that feel alive.";
   
   // Scroll-based animations
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
@@ -28,6 +32,24 @@ const Hero = () => {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
+  }, []);
+
+  // Typing animation effect
+  useEffect(() => {
+    let currentIndex = 0;
+    setDisplayText('');
+    
+    const typingInterval = setInterval(() => {
+      if (currentIndex < fullText.length) {
+        setDisplayText(prev => prev + fullText.charAt(currentIndex));
+        currentIndex++;
+      } else {
+        clearInterval(typingInterval);
+        setIsTypingComplete(true);
+      }
+    }, 40); // Speed of typing
+    
+    return () => clearInterval(typingInterval);
   }, []);
 
   // Text reveal animation variants
@@ -66,6 +88,18 @@ const Hero = () => {
 
   const handleShowcaseClick = () => {
     navigate('/showcase');
+  };
+
+  // Blinking cursor animation
+  const cursorVariants = {
+    blinking: {
+      opacity: [0, 1, 0],
+      transition: {
+        duration: 1,
+        repeat: Infinity,
+        repeatType: "loop"
+      }
+    }
   };
 
   return (
@@ -118,12 +152,19 @@ const Hero = () => {
             ))}
           </motion.h1>
           
-          <motion.p 
-            variants={textChild}
-            className="text-lg md:text-xl text-gray-300 mb-8 max-w-xl mx-auto relative z-10"
-          >
-            We merge cinematic 3D environments with buttery-smooth interactions to create browsing experiences that feel alive.
-          </motion.p>
+          {/* Typing effect for paragraph */}
+          <div className="text-lg md:text-xl text-gray-300 mb-8 max-w-xl mx-auto relative z-10 h-[80px] flex items-center justify-center">
+            <div className="flex">
+              <p>{displayText}</p>
+              {!isTypingComplete && (
+                <motion.span
+                  variants={cursorVariants}
+                  animate="blinking"
+                  className="inline-block w-[3px] h-[24px] bg-nexora-secondary ml-1"
+                />
+              )}
+            </div>
+          </div>
           
           <motion.div 
             className="flex flex-col sm:flex-row gap-4 justify-center"

@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -92,19 +93,19 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-    cursor: none; /* Hide default cursor when SmartCursor is active */
+    cursor: auto; /* Restore default cursor */
   }
 
-  /* Enable default cursor for mobile devices where our SmartCursor won't work well */
+  /* Enable default cursor for mobile devices */
   @media (max-width: 768px) {
     body {
       cursor: auto;
     }
   }
 
-  /* Show default cursor on form inputs for better usability */
+  /* Show default cursor on form inputs */
   input, textarea, select, button, a, [role="button"] {
-    cursor: none;
+    cursor: auto; /* Change from cursor: none to cursor: auto */
   }
 
   @media (max-width: 768px) {

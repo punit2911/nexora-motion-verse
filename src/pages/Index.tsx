@@ -8,12 +8,16 @@ import Technology from '@/components/Technology';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 import AnimatedBackground from '@/components/AnimatedBackground';
+import SmartCursor from '@/components/SmartCursor';
 
 const Index = () => {
   return (
     <div className="min-h-screen overflow-x-hidden bg-black relative">
       {/* 3D Animated Background */}
       <AnimatedBackground />
+      
+      {/* Smart Cursor */}
+      <SmartCursor />
       
       <div className="relative z-10">
         <Navbar />

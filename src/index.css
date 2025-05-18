@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -93,6 +92,25 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    cursor: none; /* Hide default cursor when SmartCursor is active */
+  }
+
+  /* Enable default cursor for mobile devices where our SmartCursor won't work well */
+  @media (max-width: 768px) {
+    body {
+      cursor: auto;
+    }
+  }
+
+  /* Show default cursor on form inputs for better usability */
+  input, textarea, select, button, a, [role="button"] {
+    cursor: none;
+  }
+
+  @media (max-width: 768px) {
+    input, textarea, select, button, a, [role="button"] {
+      cursor: pointer;
+    }
   }
 }
 
@@ -118,6 +136,11 @@
   z-index: 9999;
   mix-blend-mode: difference;
   transition: transform 0.15s ease-out, width 0.3s ease, height 0.3s ease;
+}
+
+/* Add visual feedback during scrolling */
+.is-scrolling .cursor-follower {
+  transform: scaleY(1.5);
 }
 
 .magnetic-button {

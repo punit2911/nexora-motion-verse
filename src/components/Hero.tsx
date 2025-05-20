@@ -10,7 +10,7 @@ const Hero = () => {
   const navigate = useNavigate();
   const { scrollY } = useScroll();
   
-  const fullText = "Elevate your digital presence with our sleek, innovative solutions that captivate and inspire.";
+  const fullText = "Transform your vision into digital reality with our cutting-edge designs that leave lasting impressions.";
   
   // Scroll-based animations
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);

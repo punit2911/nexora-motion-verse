@@ -1,69 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence, Variants } from 'framer-motion';
+
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform, Variants } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [displayText, setDisplayText] = useState('');
-  const [isTypingComplete, setIsTypingComplete] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { scrollY } = useScroll();
-  
-  const fullText = "Creating digital experiences that inspire and amaze.";
   
   // Scroll-based animations
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
   const scale = useTransform(scrollY, [0, 300], [1, 0.9]);
   const y = useTransform(scrollY, [0, 300], [0, -50]);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (containerRef.current) {
-        const { left, top, width, height } = containerRef.current.getBoundingClientRect();
-        const x = (e.clientX - left) / width - 0.5;
-        const y = (e.clientY - top) / height - 0.5;
-        setMousePosition({ x, y });
-      }
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, []);
-
-  // Typing animation effect with special handling for "We"
-  useEffect(() => {
-    // Start with just "W" for a brief moment
-    setDisplayText('W');
-    
-    // Delay before completing to "We"
-    const initialDelay = setTimeout(() => {
-      setDisplayText('We '); // Added a space after "We"
-      
-      // Then continue with the rest of the text after another short delay
-      const continueDelay = setTimeout(() => {
-        let currentIndex = 3; // Start from index 3 (after "We ")
-        
-        const typingInterval = setInterval(() => {
-          if (currentIndex < fullText.length) {
-            setDisplayText(prev => prev + fullText.charAt(currentIndex));
-            currentIndex++;
-          } else {
-            clearInterval(typingInterval);
-            setIsTypingComplete(true);
-          }
-        }, 40); // Speed of typing
-        
-        return () => clearInterval(typingInterval);
-      }, 400); // Delay before continuing with the rest of the text
-      
-      return () => clearTimeout(continueDelay);
-    }, 800); // Delay before completing "We"
-    
-    return () => clearTimeout(initialDelay);
-  }, []);
 
   // Text reveal animation variants
   const textContainer = {
@@ -101,18 +49,6 @@ const Hero = () => {
 
   const handleShowcaseClick = () => {
     navigate('/showcase');
-  };
-
-  // Blinking cursor animation - fixed type definition
-  const cursorVariants: Variants = {
-    blinking: {
-      opacity: [0, 1, 0],
-      transition: {
-        duration: 1,
-        repeat: Infinity,
-        repeatType: "loop" as const,
-      }
-    }
   };
 
   return (
@@ -165,18 +101,9 @@ const Hero = () => {
             ))}
           </motion.h1>
           
-          {/* Typing effect for paragraph with special handling for "We" */}
-          <div className="text-lg md:text-xl text-gray-300 mb-8 max-w-xl mx-auto relative z-10 h-[80px] flex items-center justify-center">
-            <div className="flex">
-              <p>{displayText}</p>
-              {!isTypingComplete && (
-                <motion.span
-                  variants={cursorVariants}
-                  animate="blinking"
-                  className="inline-block w-[3px] h-[24px] bg-nexora-secondary ml-1"
-                />
-              )}
-            </div>
+          {/* Static text instead of typing effect */}
+          <div className="text-lg md:text-xl text-gray-300 mb-8 max-w-xl mx-auto relative z-10">
+            <p>digital experiences that inspire and amaze.</p>
           </div>
           
           <motion.div 

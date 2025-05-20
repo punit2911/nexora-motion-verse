@@ -10,7 +10,7 @@ const Hero = () => {
   const navigate = useNavigate();
   const { scrollY } = useScroll();
   
-  const fullText = "We merge cinematic 3D environments with buttery-smooth interactions to create browsing experiences that feel alive.";
+  const fullText = "Experience the perfect fusion of cutting-edge design and seamless functionality in one captivating digital space.";
   
   // Scroll-based animations
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
